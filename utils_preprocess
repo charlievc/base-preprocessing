@@ -1,0 +1,72 @@
+import string
+import re
+import nltk
+
+stopwords = nltk.corpus.stopwords.words('english')
+p_stem = nltk.PorterStemmer()
+wn_lem = nltk.WordNetLemmatizer() # wordnet tracks synonyms
+
+def remove_punct(text):
+    """
+    Input:  string
+    Output: string
+    
+    Remove punctuations from a string phrase.
+    """
+    text_nopunct = "".join([char for char in text if char not in string.punctuation])
+    return text_nopunct
+
+
+def tokenize(text):
+    """
+    Input:  string
+    Output: list
+    
+    Tokenize the string phrase into a list.
+    \W+ will split on whitespaces, non-word characters.
+    """
+    ls_tokens = re.split('\W+', text)
+    return ls_tokens 
+
+
+def remove_stopwords(ls_tokenize_text):
+    """
+    Input:  list
+    Output: list
+    
+    Remove stopwords from a tokenized text list.
+    """
+    ls_text = [word for word in ls_tokenize_text if word not in stopwords]
+    return ls_text 
+
+
+def stemming(ls_tokenize_text):
+    """
+    Input:  list
+    Output: list
+    
+    Stemming - chopping off the end of the word to leave the base. 
+    May not return a 'real' word.
+    Pros: grew & growing --> grow 
+        : faster since rules are simpler
+    Cons: meanness & meaning --> mean (both reduced to the same word)
+        : goose & geese --> goos, gees 
+        : not accurate
+    """
+    ls_text = [p_stem.stem(word) for word in ls_tokenize_text]
+    return ls_text
+
+
+def lemmatizing(ls_tokenize_text):
+    """
+    Input:  list
+    Output: list
+    
+    Lemmatizing - convert words into their meaningful base form.
+    Pros: meanness & meaning --> meanness, meaning (2 different contexts)
+        : more accurate since it takes account of the context around the word
+    Cons: more computationally expensive than stemming
+        : if a word is not in the corpus, it just returns the original word
+    """
+    ls_text = [wn_lem.lemmatize(word) for word in ls_tokenize_text]
+    return ls_text

@@ -1,0 +1,67 @@
+import string 
+import numpy as np
+from matplotlib import pyplot as plt
+%matplotlib inline
+
+def count_punct(text):
+    """
+    Input:  string
+    Output: float
+    
+    Returns % of punctuation in a given text phrase.
+    Spaces in text not counted.
+    """
+    count = sum([1 for char in text if char in string.punctuation])
+    return round(count/(len(text) - text.count(" ")), 3)*100
+
+
+def count_body(text):
+    """
+    Input:  string
+    Output: integer
+    
+    Returns the word count of a text phrase.
+    Spaces in text not counted.
+    """
+    return len(text) - text.count(" ")
+
+
+def show_dist(df, col, start_range, end_range, bin_count):
+    """
+    Input:  df = dataframe
+            col = column name
+            start_range = int ; x-axis starting range 
+            end_range = int ; x-axis ending range
+            bin_count = int ; how many bin bars to display
+            ex: np.linspace(0, 50, 40)
+    Output: plot
+    
+    Returns a distribution plot.
+    Note: Do not use apply-lambda. Call function directly.
+    """
+    bins = np.linspace(start_range, end_range, bin_count)
+    plt.hist(df[col], bins)
+    plt.title(str(col),'distribution')
+    plt.show()
+
+
+def show_tx_dist(df, col, bin_count):
+    """
+    Input:  df = dataframe
+            col = column name
+            bin_count = int ; how many bin bars to display
+    Output: plot
+    
+    Returns a distribution plot.
+    Note: Do not use apply-lambda. Call function directly.
+    If a distribution plot shows left or right skew, use this 
+    to pull in the data/ outliers to a more compact distribution. 
+    Far spread-out distribution will affect the model.
+    
+    A good box-cox transform value will display a graph that may
+    resemble a std normal distribution.
+    """
+    for i in [1,2,3,4,5]:
+        plt.hist((df[col])**(1/i), bins=bin_count)
+        plt.title(str(col),'distribution with transformation: 1/{}'.format(str(i)))
+        plt.show() 
